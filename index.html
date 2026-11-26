@@ -4,106 +4,189 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rainbrew Online Menu</title>
+<meta name="description" content="Rainbrew Coffee Shop online menu: coffee, milk tea, frappes, pizza, rice meals and more. Build your order and send it on Messenger.">
+<meta name="theme-color" content="#1d1c52">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rainbrew Coffee Shop">
+<meta property="og:title" content="Rainbrew Online Menu">
+<meta property="og:description" content="Coffee, milk tea, pizza, rice meals and more. Build your order and send it on Messenger.">
+<meta property="og:url" content="https://rainbrewhr.github.io/online-menu/">
+<meta property="og:image" content="https://rainbrewhr.github.io/online-menu/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Rainbrew Coffee Shop online menu">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: sticky brand bar with search and category chips; one long scroll of dotted-leader price rows, two price columns where a size or serving applies. */
 :root{
   --bg:#fff8f4;
   --surface:#ffffff;
   --ink:#2b1b1f;
   --muted:#7b6469;
   --accent:#e8381f;
+  --accent-strong:#c42d15;
   --accent-ink:#ffffff;
   --navy:#1d1c52;
+  --navy-ink:#ffffff;
   --line:#f0dcd6;
   --soft:#ffe9e1;
+  --gold:#b98a00;
+  --ok:#1f7a3a;
   --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
   --body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#1b1315;
-    --surface:#261b1e;
-    --ink:#fbeee9;
-    --muted:#b89fa4;
-    --accent:#ff6a4d;
-    --accent-ink:#2b0f0a;
-    --navy:#c9c8ff;
-    --line:#3d2b2f;
-    --soft:#3a2326;
-    color-scheme:dark;
+    --bg:#1b1315;--surface:#261b1e;--ink:#fbeee9;--muted:#b89fa4;--accent:#ff6a4d;--accent-strong:#ff6a4d;--accent-ink:#2b0f0a;--navy:#c9c8ff;--navy-ink:#1b1315;--line:#3d2b2f;--soft:#3a2326;--gold:#ffd23d;--ok:#6fdc8c;color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#1b1315;
-  --surface:#261b1e;
-  --ink:#fbeee9;
-  --muted:#b89fa4;
-  --accent:#ff6a4d;
-  --accent-ink:#2b0f0a;
-  --navy:#c9c8ff;
-  --line:#3d2b2f;
-  --soft:#3a2326;
-  color-scheme:dark;
+  --bg:#1b1315;--surface:#261b1e;--ink:#fbeee9;--muted:#b89fa4;--accent:#ff6a4d;--accent-strong:#ff6a4d;--accent-ink:#2b0f0a;--navy:#c9c8ff;--navy-ink:#1b1315;--line:#3d2b2f;--soft:#3a2326;--gold:#ffd23d;--ok:#6fdc8c;color-scheme:dark;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+body.has-bar{padding-bottom:84px}
+button{font:inherit;color:inherit}
+a{color:inherit}
 .stripe{height:6px;background:linear-gradient(90deg,#ff4d4d,#ff9a3d,#ffd23d,#5ccf6e,#3da9ff,#8a5cff,#ff5cc8)}
-header.brand{padding:18px 16px 6px;max-width:760px;margin:0 auto}
-.wordmark{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;margin:0;letter-spacing:.5px;display:flex;flex-wrap:wrap}
-.wordmark span:nth-child(1){color:#ff4d4d}.wordmark span:nth-child(2){color:#ff8a2b}.wordmark span:nth-child(3){color:#e8b400}.wordmark span:nth-child(4){color:#3fb556}.wordmark span:nth-child(5){color:#2e93ee}.wordmark span:nth-child(6){color:#7a4df0}.wordmark span:nth-child(7){color:#e84db3}
+header.brand{padding:18px 16px 6px;max-width:760px;margin:0 auto;display:flex;align-items:flex-start;gap:12px}
+.brand-txt{flex:1;min-width:0}
+.wordmark{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;margin:0;letter-spacing:.5px;display:flex;flex-wrap:nowrap}
+.wordmark span:nth-child(1){color:#ff4d4d}.wordmark span:nth-child(2){color:#ff8a2b}.wordmark span:nth-child(3){color:var(--gold)}.wordmark span:nth-child(4){color:#3fb556}.wordmark span:nth-child(5){color:#2e93ee}.wordmark span:nth-child(6){color:#7a4df0}.wordmark span:nth-child(7){color:#e84db3}
 .sub{margin:6px 0 0;color:var(--muted);font-size:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:15px;border-radius:999px;padding:10px 16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:var(--navy-ink)}
+.btn.small{font-size:14px;padding:8px 12px}
+.btn:focus-visible,.tab:focus-visible,.chip:focus-visible,.p.add:focus-visible,.seg button:focus-visible,.qty button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.seg{display:inline-flex;margin-top:10px;border:1.5px solid var(--line);border-radius:999px;padding:2px;background:var(--surface)}
+.seg button{white-space:nowrap;border:0;background:none;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--navy-ink)}
 .sticky{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
 .sticky-in{max-width:760px;margin:0 auto;padding:10px 16px 8px}
-.search{position:relative}
+.search{position:relative;display:block}
 .search input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:11px 14px 11px 40px;outline:none}
 .search input:focus-visible{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
 .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
 .tabs{display:flex;gap:8px;margin:10px 0 8px}
-.tab{flex:1;font:inherit;font-weight:700;font-size:15px;padding:9px 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-.tab[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--bg)}
-.tab:focus-visible,.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tab{flex:1;font-weight:700;font-size:15px;padding:9px 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--navy-ink)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:0 0 auto;font:inherit;font-size:14px;font-weight:500;padding:6px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;white-space:nowrap}
-.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
-main{max-width:760px;margin:0 auto;padding:6px 16px 40px}
+.chip{flex:0 0 auto;font-size:14px;font-weight:500;padding:6px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--accent-strong);border-color:var(--accent-strong);color:var(--accent-ink);font-weight:700}
+main{max-width:760px;margin:0 auto;padding:6px 16px 24px}
+.hint{margin:14px 0 0;font-size:14px;color:var(--muted)}
 section{scroll-margin-top:calc(var(--stick,170px) + 12px);margin-top:26px}
 section h2{font-family:var(--display);font-weight:600;font-size:28px;line-height:1.15;margin:0;color:var(--navy);text-wrap:balance}
 section .note{margin:4px 0 0;color:var(--muted);font-size:14px}
-.card{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:6px 16px}
-.colhead{display:flex;justify-content:flex-end;gap:0;padding:10px 0 4px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.colhead span,.row .p{min-width:64px;text-align:right}
-.row{display:flex;align-items:baseline;gap:10px;padding:11px 0;border-bottom:1px dashed var(--line)}
+.card{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:6px 14px}
+.colhead{display:flex;justify-content:flex-end;gap:8px;padding:10px 0 4px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.colhead span,.row .p{min-width:72px;text-align:center}
+.row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px dashed var(--line)}
 .row:last-child{border-bottom:0}
+.row .ph{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:0 0 auto;background:var(--soft)}
 .row .t{flex:1;min-width:0}
 .row .n{font-weight:500;overflow-wrap:anywhere}
 .row .d{display:block;font-size:13.5px;color:var(--muted);margin-top:1px}
-.row .p{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .p{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;padding:6px 4px}
 .row .p.none{color:var(--muted);font-weight:400}
-.sub-h{font-family:var(--display);font-weight:600;font-size:18px;margin:16px 0 0;color:var(--accent)}
-.addons{margin-top:12px;background:var(--soft);border-radius:14px;padding:12px 16px}
-.addons h3{margin:0 0 6px;font-family:var(--display);font-size:17px;font-weight:600}
-.addons ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14.5px}
-.addons li b{font-variant-numeric:tabular-nums}
-.empty{display:none;text-align:center;color:var(--muted);padding:40px 0}
-footer{max-width:760px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:13px}
+.p.add{border:1.5px solid var(--line);background:var(--bg);border-radius:999px;cursor:pointer;padding:6px 8px;display:inline-flex;align-items:center;justify-content:center;gap:3px}
+.p.add::before{content:'+';font-weight:700;color:var(--accent-strong)}
+.p.add:hover{border-color:var(--accent)}
+.p.add.bump{animation:bump .35s ease}
+@keyframes bump{40%{transform:scale(1.12);background:var(--soft)}}
+.row.soldout .n,.row.soldout .p{color:var(--muted)}
+.row.soldout .p{text-decoration:line-through}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:2px;background:var(--soft);color:var(--accent-strong)}
+.badge.best{background:var(--navy);color:var(--navy-ink)}
+.badge.sold{background:var(--line);color:var(--muted)}
+.sub-h{font-family:var(--display);font-weight:600;font-size:18px;margin:16px 0 0;color:var(--accent-strong)}
+.addons{margin-top:12px;background:var(--soft);border-radius:14px;padding:12px 14px}
+.addons h3{margin:0 0 8px;font-family:var(--display);font-size:17px;font-weight:600}
+.addons ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.addons li .p{min-width:0;padding:5px 10px;font-weight:500}
+.addons li .p b{font-variant-numeric:tabular-nums;font-weight:700}
+.addons li span.p{display:inline-block}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px 16px}
+.contact{max-width:760px;margin:0 auto;padding:8px 16px 0}
+.contact .card{padding:16px}
+.contact h2{font-family:var(--display);font-weight:600;font-size:24px;margin:0 0 4px;color:var(--navy)}
+.contact p{margin:4px 0;color:var(--muted);font-size:15px}
+.contact .info{margin:10px 0 0;padding:0;list-style:none;font-size:15px}
+.contact .info li{padding:3px 0}
+.contact .row-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+footer{max-width:760px;margin:0 auto;padding:16px 16px 40px;color:var(--muted);font-size:13px}
 footer p{margin:4px 0}
+/* order bar */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 30%);display:none}
+.bar.show{display:block}
+.bar button{width:100%;max-width:728px;margin:0 auto;display:flex;align-items:center;gap:10px;border:0;border-radius:16px;padding:14px 16px;background:var(--navy);color:var(--navy-ink);font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.bar .count{background:var(--accent);color:var(--accent-ink);border-radius:999px;min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:14px;padding:0 7px}
+.bar .grow{flex:1;text-align:left}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(10px);opacity:0;z-index:30;background:var(--ink);color:var(--bg);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:500;pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* order sheet */
+dialog#order{border:0;padding:0;margin:auto auto 0;width:100%;max-width:760px;max-height:92vh;border-radius:20px 20px 0 0;background:var(--bg);color:var(--ink)}
+dialog#order::backdrop{background:rgba(20,10,12,.5)}
+.sheet{display:flex;flex-direction:column;max-height:92vh}
+.sheet-h{display:flex;align-items:center;gap:8px;padding:16px 16px 8px;border-bottom:1px solid var(--line)}
+.sheet-h h2{flex:1;margin:0;font-family:var(--display);font-weight:600;font-size:24px;color:var(--navy)}
+.x{border:0;background:var(--surface);border-radius:999px;width:40px;height:40px;cursor:pointer;font-size:22px;line-height:1}
+.sheet-b{overflow-y:auto;padding:8px 16px 16px}
+.oi{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.oi .t{flex:1;min-width:0}
+.oi .n{font-weight:500}
+.oi .d{display:block;font-size:13px;color:var(--muted)}
+.oi .lt{font-weight:700;font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+.qty{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;background:var(--surface)}
+.qty button{border:0;background:none;width:34px;height:34px;border-radius:999px;cursor:pointer;font-size:18px;font-weight:700}
+.qty span{min-width:22px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.total{display:flex;justify-content:space-between;font-weight:700;font-size:18px;padding:12px 0 4px}
+.fine{font-size:13px;color:var(--muted);margin:0 0 8px}
+.field{display:block;margin-top:12px;font-size:14px;font-weight:700}
+.field input[type=text],.field textarea{display:block;width:100%;margin-top:4px;font:inherit;font-size:16px;font-weight:400;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px}
+.field textarea{min-height:70px;resize:vertical}
+.radios input{margin:0;accent-color:var(--navy)}
+.field input[type=text]:focus-visible,.field textarea:focus-visible{outline:none;border-color:var(--accent)}
+.radios{display:flex;gap:8px;margin-top:6px}
+.radios label{flex:1;display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);font-weight:500;cursor:pointer}
+.radios label:has(input:checked){border-color:var(--navy)}
+.acts{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.acts .btn{width:100%;padding:13px 16px}
+.link-btn{border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:14px;padding:8px}
+.status{margin:10px 0 0;font-size:14px;color:var(--ok);font-weight:500;min-height:1em}
+@media (max-width:420px){
+  .msg-top{width:44px;height:44px;padding:0}
+  .msg-top .lbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+}
 @media (min-width:640px){
   .wordmark{font-size:60px}
-  .row .p,.colhead span{min-width:78px}
+  .row .p,.colhead span{min-width:86px}
+  dialog#order{margin:auto;border-radius:20px}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.p.add.bump{animation:none}.toast{transition:none}}
 </style>
 </head>
 <body>
 <div class="stripe"></div>
 <header class="brand">
-  <h1 class="wordmark" aria-label="Rainbrew"><span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>r</span><span>e</span><span>w</span></h1>
-  <p class="sub">Coffee Shop &middot; Online menu &middot; Prices in pesos (₱)</p>
+  <div class="brand-txt">
+    <h1 class="wordmark" aria-label="Rainbrew"><span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>r</span><span>e</span><span>w</span></h1>
+    <p class="sub">Coffee Shop &middot; Online menu &middot; Prices in pesos (₱)</p>
+    <div class="seg" id="pricemode" role="group" aria-label="Price list" hidden>
+      <button type="button" data-m="online" aria-pressed="true">Online prices</button>
+      <button type="button" data-m="walkin" aria-pressed="false">Walk-in prices</button>
+    </div>
+  </div>
+  <a class="btn small primary msg-link msg-top" href="#" target="_blank" rel="noopener" aria-label="Message us on Messenger">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span class="lbl">Message us</span>
+  </a>
 </header>
 <div class="sticky">
   <div class="sticky-in">
@@ -118,22 +201,79 @@ footer p{margin:4px 0}
     <nav class="chips" id="chips" aria-label="Menu sections"></nav>
   </div>
 </div>
-<main id="menu"></main>
-<p class="empty" id="empty">No match. Try another word.</p>
+<main>
+  <p class="hint" id="hint">Tap a price to add it to your order, then send it to us on Messenger.</p>
+  <div id="menu"></div>
+  <p class="empty" id="empty">No match. Try another word.</p>
+</main>
+<div class="contact">
+  <div class="card">
+    <h2>Order or ask us</h2>
+    <p>Send your order or questions to our Facebook page.</p>
+    <ul class="info" id="info"></ul>
+    <div class="row-btns">
+      <a class="btn primary msg-link" href="#" target="_blank" rel="noopener">Message us on Messenger</a>
+      <a class="btn fb-link" href="#" target="_blank" rel="noopener">Facebook page</a>
+    </div>
+  </div>
+</div>
 <footer>
   <p>Prices are for online orders and may change without notice.</p>
-  <p>Facebook: RainbrewCoffeeShop &middot; Menu updated November 26, 2026.</p>
+  <p id="updated">Menu updated November 26, 2026.</p>
 </footer>
+
+<div class="bar" id="bar"><button type="button" id="open-order"><span class="count" id="bar-count">0</span><span class="grow">View your order</span><span id="bar-total">₱0</span></button></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<dialog id="order" aria-labelledby="order-title">
+  <div class="sheet">
+    <div class="sheet-h"><h2 id="order-title">Your order</h2><button class="x" type="button" id="close-order" aria-label="Close">&times;</button></div>
+    <div class="sheet-b">
+      <div id="order-list"></div>
+      <div class="total"><span>Total</span><span id="order-total">₱0</span></div>
+      <p class="fine">Online prices. We'll confirm your order and total on Messenger.</p>
+      <div class="field">Pickup or delivery?
+        <div class="radios">
+          <label><input type="radio" name="how" value="Pickup" checked> Pickup</label>
+          <label><input type="radio" name="how" value="Delivery"> Delivery</label>
+        </div>
+      </div>
+      <label class="field">Your name (optional)<input id="o-name" type="text" autocomplete="name"></label>
+      <label class="field"><span id="notes-label">Notes (optional)</span><textarea id="o-notes" placeholder="Pickup time, address, requests"></textarea></label>
+      <div class="acts">
+        <button class="btn primary" type="button" id="send">Send order on Messenger</button>
+        <button class="btn" type="button" id="copy">Copy order text</button>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <button class="link-btn" type="button" id="clear">Clear order</button>
+    </div>
+  </div>
+</dialog>
+
 <script>
-function I(n,p,d){return {n:n,p:Array.isArray(p)?p:[p],d:d||''}}
+/* ===== Settings: edit these ===== */
+var CONFIG={
+  facebook:'https://www.facebook.com/RainbrewCoffeeShop',
+  messenger:'https://m.me/RainbrewCoffeeShop',
+  /* Live prices: the Google Sheet must be shared as "Anyone with the link can view". Leave '' to use only the built-in menu below. */
+  sheetCsv:'https://docs.google.com/spreadsheets/d/1vzjvr5cmlHu02OXuOkmootrUmH3kJLOO9bua1Ze7S88/gviz/tq?tqx=out:csv&headers=1&sheet=Untitled',
+  /* Shown in "Order or ask us" when filled in */
+  phone:'',
+  address:'',
+  hours:'',
+  mapUrl:''
+};
+
+/* ===== Built-in menu (used when the sheet can't be loaded) ===== */
+function I(n,p,d,r){return {n:n,p:Array.isArray(p)?p:[p],d:d||'',r:r||''}}
 var MENU=[
 {id:'specials',g:'food',t:'Must Try Specials',note:'New and improved',items:[
- I('Sweet & Sour Pork Fillet',148,'Crispy pork fillet tossed in a rich sweet and sour sauce with a perfect balance of tangy and savory flavors.'),
- I('Spanish Latte Float',188,'Creamy Spanish latte topped with an ice cream float and drizzled with rich chocolate fudge.'),
- I('Iced Vanilla Oat',160,'Smooth espresso with oat milk and vanilla syrup for a warm, velvety sip.'),
- I('Siomai',78,'Improved pork siomai with a richer savory taste and perfectly tender texture.'),
- I('Mango Tapioca',98,'Creamy mango drink with chewy tapioca pearls, topped with cream and real mango chunks.'),
- I('Cucumber Calamansi',95,'A smooth, crisp, and citrusy cucumber refresher perfect for hot days.')]},
+ I('Sweet & Sour Pork Fillet',148,'Crispy pork fillet tossed in a rich sweet and sour sauce with a perfect balance of tangy and savory flavors.','rice meals|sweet and sour pork fillet'),
+ I('Spanish Latte Float',188,'Creamy Spanish latte topped with an ice cream float and drizzled with rich chocolate fudge.','coffee|spanish latte float|iced 16 oz'),
+ I('Iced Vanilla Oat',160,'Smooth espresso with oat milk and vanilla syrup for a warm, velvety sip.','coffee|vanilla oat|iced 16 oz'),
+ I('Siomai',78,'Improved pork siomai with a richer savory taste and perfectly tender texture.','short order|siomai fried or steam'),
+ I('Mango Tapioca',98,'Creamy mango drink with chewy tapioca pearls, topped with cream and real mango chunks.','desserts|mango tapioca dream'),
+ I('Cucumber Calamansi',95,'A smooth, crisp, and citrusy cucumber refresher perfect for hot days.','fresh fruit shake|cucumber calamansi')]},
 {id:'main',g:'food',t:'Main Course',note:'Platter',items:[
  I('Baby Backribs',338),I('KBL',248,'Kadyos, Baboy at Langka'),I('Bangus Sinigang',278),I('Sizzling Bangus',298),I('Pork Sinigang',278),I('Sizzling Pork Sisig',278),I('Pork Belly',308),I('Crispy Pork Kare-Kare',328),I('Beef Kare-Kare',338),I('Lumpiang Shanghai (10 pcs)',178),I('Beef Broccoli',368),I('Sweet & Sour Fish Fillet',228),I('Buffalo Wings',278),I('Bangus Sisig',308)],
  sub:[{h:'Salad',items:[I('Caesar Salad',238),I('Chef Garden',238)]},{h:'Vegies',items:[I('Chopsuey',248),I('Buttered Vegies',228)]}]},
@@ -181,7 +321,7 @@ var MENU=[
 {id:'milktea',g:'drinks',t:'Milk Tea',cols:['Grande','Venti'],sub:[
  {h:'Classic milk tea',items:[I('Wintermelon',[98,128]),I('Okinawa',[98,128]),I('Hokkaido',[98,128]),I('Taro',[98,128]),I('Oreo',[98,128]),I('Matcha',[98,128]),I('Blueberry',[98,128]),I('Strawberry',[98,128]),I('Mango',[98,128]),I('Lychee',[98,128]),I('Banana',[98,128]),I('Chocolate',[98,128]),I('Roasted Okinawa',[98,128])]},
  {h:'Cream cheese milk tea',items:[I('Oreo',[118,148]),I('Okinawa',[118,148]),I('Hokkaido',[118,148]),I('Taro',[118,148]),I('Matcha',[118,148]),I('Wintermelon',[118,148]),I('Blueberry',[118,148]),I('Strawberry',[118,148]),I('Mango',[118,148]),I('Lychee',[118,148])]}],
- add:{h:'Add-ons +20',l:[['Black pearl',''],['Nata de coco',''],['Cream cheese',''],['Rainbow jelly',''],['Coffee jelly',''],['Yogurt',''],['Popping boba (lychee, blueberry, strawberry, mango)','']]}},
+ add:{h:'Add-ons',l:[['Black pearl',''],['Nata de coco',''],['Cream cheese',''],['Rainbow jelly',''],['Coffee jelly',''],['Yogurt',''],['Popping boba (lychee, blueberry, strawberry, mango)','']]}},
 {id:'fruittea',g:'drinks',t:'Fruit Tea',cols:['Grande','Venti'],sub:[
  {h:'Fruit tea',items:[I('Passion Fruit',[78,98]),I('Green Apple',[78,98]),I('Kiwi',[78,98]),I('Mango',[78,98]),I('Strawberry',[78,98]),I('Blueberry',[78,98]),I('Lemon',[78,98]),I('Lychee',[78,98])]},
  {h:'Yogurt fruit tea',items:[I('Passion Fruit',[98,118]),I('Green Apple',[98,118]),I('Kiwi',[98,118]),I('Mango',[98,118]),I('Strawberry',[98,118]),I('Blueberry',[98,118]),I('Lemon',[98,118])]}]},
@@ -193,84 +333,266 @@ var MENU=[
  I('Choco Fudge',38),I('Biscoff',68),I('Caramel',38),I('Oreo',48),I('Strawberry',38)]}
 ];
 
-var menuEl=document.getElementById('menu'),chipsEl=document.getElementById('chips'),emptyEl=document.getElementById('empty'),qEl=document.getElementById('q');
-var group='food';
-function peso(v){return v===null||v===''?null:'₱'+v}
+MENU.forEach(function(s){if(s.add)s.add.l=s.add.l.map(function(x){return {n:x[0],p:[x[1]===''?20:x[1]]}})});
+
+/* ===== Helpers ===== */
+function $(id){return document.getElementById(id)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function rowHtml(it,cols,grp){
-  var ps=it.p.map(function(v){var s=peso(v);return s?'<span class="p">'+s+'</span>':'<span class="p none">&ndash;</span>'}).join('');
-  return '<div class="row" data-s="'+esc((it.n+' '+it.d+' '+(grp||'')).toLowerCase())+'"><div class="t"><span class="n">'+esc(it.n)+'</span>'+(it.d?'<span class="d">'+esc(it.d)+'</span>':'')+'</div>'+ps+'</div>';
+function peso(v){return '₱'+Number(v).toLocaleString('en-PH')}
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/&/g,' and ').replace(/[^a-z0-9"]+/g,' ').trim()}
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+
+/* ===== Google Sheet ===== */
+var CAT={'main course':['main'],'salad':['main','Salad'],'vegies':['main','Vegies'],'rice meals':['rice'],'silog meals':['silog'],'nuggets':['nuggets'],'pancakes':['nuggets'],'pancakes - add-ons':['nuggets',0,1],'chicken fillet':['chicken'],'pasta':['pasta'],'snacks':['snacks'],'short order':['short'],'pizza':['pizza'],'pizza - add-ons':['pizza',0,1],'barkada meals':['barkada'],'sandwiches':['sandwich'],'burgers':['burgers'],'combo meals':['combo'],'fried rice':['friedrice'],'fried rice - add-ons':['friedrice',0,1],'korean dishes':['korean'],'coffee':['coffee'],'frappe - coffee based':['frappe','Coffee based'],'frappe - cream based':['frappe','Cream based'],'milkshake overload':['milkshake'],'fresh fruit shake':['shake'],'classic milk tea':['milktea','Classic milk tea'],'cream cheese milk tea':['milktea','Cream cheese milk tea'],'milk tea - add-ons':['milktea',0,1],'fruit tea':['fruittea','Fruit tea'],'yogurt fruit tea':['fruittea','Yogurt fruit tea'],'drinks':['drinks'],'desserts':['desserts'],'soft serve dreams':['softserve']};
+function parseCSV(t){
+  var rows=[],row=[],f='',q=false;
+  for(var i=0;i<t.length;i++){
+    var c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;
+    else if(c===','){row.push(f);f=''}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(f);rows.push(row);row=[];f=''}
+    else f+=c;
+  }
+  if(f!==''||row.length){row.push(f);rows.push(row)}
+  return rows;
+}
+function num(v){var s=String(v==null?'':v).replace(/[₱,\s]/g,'');return s!==''&&isFinite(s)?Number(s):null}
+function tagsOf(s){return String(s||'').split(/[,;]/).map(function(x){return norm(x)}).filter(Boolean)}
+/* Builds the menu from sheet rows. Returns null when the sheet doesn't look right, so the built-in menu stays. */
+function fromSheet(csv){
+  var rows=parseCSV(csv);if(rows.length<20)return null;
+  var h=rows[0].map(norm),col=function(){for(var i=0;i<arguments.length;i++){var k=h.indexOf(arguments[i]);if(k>-1)return k}return -1};
+  var C={cat:col('category'),item:col('item'),size:col('size variation','size'),desc:col('contents description','description'),walk:col('walk in price'),online:col('online price','price'),tags:col('tags'),photo:col('photo','photo url','image')};
+  if(C.cat<0||C.item<0||C.online<0)return null;
+  var base={};BASE.forEach(function(s){base[s.id]=s});
+  var out=BASE.map(function(s){return {id:s.id,g:s.g,t:s.t,note:s.note,cols:s.cols,items:[],sub:(s.sub||[]).map(function(b){return {h:b.h,items:[]}}),add:s.add?{h:s.add.h,l:[]}:null}});
+  var byId={};out.forEach(function(s){byId[s.id]=s});
+  var look={},priced=0,hasWalk=false;
+  function baseDesc(sid,name){var s=base[sid];if(!s)return '';var all=(s.items||[]).concat.apply(s.items||[],(s.sub||[]).map(function(b){return b.items}));for(var i=0;i<all.length;i++)if(norm(all[i].n)===norm(name))return all[i].d;return ''}
+  for(var r=1;r<rows.length;r++){
+    var R=rows[r],cat=(R[C.cat]||'').trim(),name=(R[C.item]||'').trim();if(!cat||!name)continue;
+    var size=C.size>-1?(R[C.size]||'').trim():'',on=num(R[C.online]),wk=C.walk>-1?num(R[C.walk]):null,tags=C.tags>-1?tagsOf(R[C.tags]):[];
+    if(on!=null)priced++;if(wk!=null)hasWalk=true;
+    var key=norm(cat)+'|'+norm(name);look[key+'|'+norm(size)]=look[key+'|'+norm(size)]||{p:on,w:wk,tags:tags};look[key]=look[key]||{p:on,w:wk,tags:tags};
+    var loc=CAT[norm(cat).replace(/ and /g,' ')]||CAT[cat.toLowerCase()];
+    var sec;
+    if(loc)sec=byId[loc[0]];
+    else{var id='x-'+norm(cat).replace(/ /g,'-');sec=byId[id];if(!sec){sec={id:id,g:'food',t:cat,items:[],sub:[],add:null};byId[id]=sec;out.push(sec)}loc=[id]}
+    if(loc[2]){if(!sec.add)sec.add={h:'Add-ons',l:[]};sec.add.l.push({n:name,p:[on],w:[wk],tags:tags});continue}
+    var list=sec.items;
+    if(loc[1]){var b=null;sec.sub.forEach(function(x){if(x.h===loc[1])b=x});if(!b){b={h:loc[1],items:[]};sec.sub.push(b)}list=b.items}
+    var desc=C.desc>-1&&R[C.desc]?R[C.desc].trim():baseDesc(sec.id,name),photo=C.photo>-1?(R[C.photo]||'').trim():'';
+    var cols=sec.cols,idx=-1;
+    if(cols){cols.forEach(function(c,i){if(norm(c)===norm(size))idx=i});if(idx<0)idx=0}
+    var it=null;
+    for(var j=0;j<list.length;j++){if(norm(list[j].n)===norm(name)&&(cols||norm(list[j].size)===norm(size))){it=list[j];break}}
+    if(!it&&!cols){for(j=0;j<list.length;j++)if(norm(list[j].n)===norm(name)){name=name+' ('+size+')';break}}
+    if(!it){it={n:name,size:size,p:cols?cols.map(function(){return null}):[null],w:cols?cols.map(function(){return null}):[null],d:desc,tags:[],img:/^https:\/\//.test(photo)?photo:''};list.push(it)}
+    var k=cols?idx:0;it.p[k]=on;it.w[k]=wk;
+    tags.forEach(function(t){if(it.tags.indexOf(t)<0)it.tags.push(t)});
+  }
+  if(priced<20)return null;
+  var sp=byId.specials;
+  base.specials.items.forEach(function(x){
+    var m=x.r&&look[x.r];
+    sp.items.push({n:x.n,p:[m?m.p:x.p[0]],w:[m?m.w:null],d:x.d,tags:m?m.tags:[]});
+  });
+  return {menu:out,walk:hasWalk};
+}
+
+/* ===== State ===== */
+var BASE=MENU,DATA=MENU,group='food',mode='online',hasWalk=false,ITEMS=[],cart={};
+try{cart=JSON.parse(store('rb-cart')||'{}')||{}}catch(e){cart={}}
+
+/* ===== Render ===== */
+function badges(t){
+  var h='';(t||[]).forEach(function(x){
+    if(x==='best seller'||x==='bestseller')h+='<span class="badge best">Best seller</span>';
+    else if(x==='new')h+='<span class="badge">New</span>';
+    else if(x==='spicy')h+='<span class="badge">Spicy</span>';
+    else if(x==='sold out')h+='<span class="badge sold">Sold out</span>';
+  });return h;
+}
+function isSold(it){return (it.tags||[]).indexOf('sold out')>-1}
+function priceCell(it,i,cols,ctx){
+  var sold=isSold(it),v=mode==='walkin'?(it.w||[])[i]:it.p[i];
+  if(v==null)return '<span class="p none" aria-label="Not available">&ndash;</span>';
+  if(mode==='walkin'||sold)return '<span class="p">'+peso(v)+'</span>';
+  var size=cols?cols[i]:'',id=ITEMS.length;
+  ITEMS.push({n:it.n,size:size,price:v,ctx:ctx});
+  return '<button type="button" class="p add" data-i="'+id+'" aria-label="Add '+esc(it.n+(size?', '+size:'')+', '+peso(v))+'">'+peso(v)+'</button>';
+}
+function rowHtml(it,cols,ctx,grp){
+  var s=norm([it.n,it.d,grp||'',ctx].concat(it.tags||[]).join(' '));
+  return '<div class="row'+(isSold(it)?' soldout':'')+'" data-s="'+esc(s)+'">'+(it.img?'<img class="ph" src="'+esc(it.img)+'" alt="" loading="lazy">':'')+'<div class="t"><span class="n">'+esc(it.n)+'</span>'+badges(it.tags)+(it.d?'<span class="d">'+esc(it.d)+'</span>':'')+'</div>'+it.p.map(function(_,i){return priceCell(it,i,cols,ctx)}).join('')+'</div>';
 }
 function colHead(cols){return cols?'<div class="colhead">'+cols.map(function(c){return '<span>'+esc(c)+'</span>'}).join('')+'</div>':''}
+function addonHtml(s){
+  var l=s.add.l.map(function(x){
+    var v=mode==='walkin'?(x.w||[])[0]:x.p[0];if(v==null||v==='')return '<li><span class="p">'+esc(x.n)+'</span></li>';
+    if(mode==='walkin'||isSold(x))return '<li><span class="p">'+esc(x.n)+' <b>'+peso(v)+'</b></span></li>';
+    var id=ITEMS.length;ITEMS.push({n:x.n,size:'Add-on',price:v,ctx:s.t});
+    return '<li><button type="button" class="p add" data-i="'+id+'" aria-label="Add '+esc(x.n)+' add-on, '+peso(v)+'">'+esc(x.n)+' <b>'+peso(v)+'</b></button></li>';
+  }).join('');
+  return '<div class="addons" data-s="'+esc(norm(s.t+' add-ons add on '+s.add.h+' '+s.add.l.map(function(x){return x.n}).join(' ')))+'"><h3>'+esc(s.add.h)+'</h3><ul>'+l+'</ul></div>';
+}
 function render(){
-  var html='';
-  MENU.forEach(function(s){
+  ITEMS=[];var html='';
+  DATA.forEach(function(s){
+    var subs=(s.sub||[]).filter(function(b){return b.items.length});
+    if(!(s.items&&s.items.length)&&!subs.length&&!(s.add&&s.add.l.length))return;
     html+='<section id="s-'+s.id+'" data-g="'+s.g+'"><h2>'+esc(s.t)+'</h2>'+(s.note?'<p class="note">'+esc(s.note)+'</p>':'');
-    if(s.items&&s.items.length){html+='<div class="card">'+colHead(s.cols)+s.items.map(function(i){return rowHtml(i,s.cols)}).join('')+'</div>'}
-    (s.sub||[]).forEach(function(b){
-      html+='<h3 class="sub-h">'+esc(b.h)+'</h3><div class="card">'+colHead(s.cols)+b.items.map(function(i){return rowHtml(i,s.cols,b.h)}).join('')+'</div>';
-    });
-    if(s.add){html+='<div class="addons" data-s="'+esc((s.add.h+' '+s.add.l.map(function(x){return x[0]}).join(' ')).toLowerCase())+'"><h3>'+esc(s.add.h)+'</h3><ul>'+s.add.l.map(function(x){return '<li>'+esc(x[0])+(x[1]!==''?' <b>₱'+x[1]+'</b>':'')+'</li>'}).join('')+'</ul></div>'}
+    if(s.items&&s.items.length)html+='<div class="card">'+colHead(s.cols)+s.items.map(function(i){return rowHtml(i,s.cols,s.t)}).join('')+'</div>';
+    subs.forEach(function(b){html+='<h3 class="sub-h">'+esc(b.h)+'</h3><div class="card">'+colHead(s.cols)+b.items.map(function(i){return rowHtml(i,s.cols,s.t+' – '+b.h,b.h)}).join('')+'</div>'});
+    if(s.add&&s.add.l.length)html+=addonHtml(s);
     html+='</section>';
   });
-  menuEl.innerHTML=html;
+  $('menu').innerHTML=html;
+  $('hint').textContent=mode==='walkin'?'Showing walk-in prices for dine-in and counter orders. Switch to Online prices to order here.':'Tap a price to add it to your order, then send it to us on Messenger.';
 }
 function buildChips(){
-  chipsEl.innerHTML=MENU.filter(function(s){return s.g===group}).map(function(s){return '<button type="button" class="chip" data-id="s-'+s.id+'">'+esc(s.t)+'</button>'}).join('');
+  var secs=Array.prototype.filter.call(document.querySelectorAll('#menu section'),function(s){return s.getAttribute('data-g')===group});
+  $('chips').innerHTML=secs.map(function(s){return '<button type="button" class="chip" data-id="'+s.id+'">'+esc(s.querySelector('h2').textContent)+'</button>'}).join('');
 }
+
+/* ===== Search (forgives small typos) ===== */
+function lev(a,b){if(a===b)return 0;var m=a.length,n=b.length,d=[],i,j;for(i=0;i<=n;i++)d[i]=i;for(i=1;i<=m;i++){var p=d[0];d[0]=i;for(j=1;j<=n;j++){var t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[n]}
+function wordHit(w,toks){
+  var tol=w.length>=7?2:w.length>=4?1:0;
+  for(var i=0;i<toks.length;i++){var t=toks[i];
+    if(t.indexOf(w)===0)return true;
+    if(tol&&(lev(w,t)<=tol||lev(w,t.slice(0,w.length))<=1&&w.length>=4))return true;}
+  return false;
+}
+function matches(q,s){var toks=s.split(' ');return q.every(function(w){return wordHit(w,toks)})}
 function apply(){
-  var q=qEl.value.trim().toLowerCase(),shown=0;
-  document.querySelectorAll('section').forEach(function(sec){
-    var inGroup=q?true:sec.getAttribute('data-g')===group;
-    var any=false;
-    sec.querySelectorAll('.row,.addons').forEach(function(r){
-      var hit=!q||r.getAttribute('data-s').indexOf(q)>-1||sec.querySelector('h2').textContent.toLowerCase().indexOf(q)>-1;
-      r.style.display=hit?'':'none';
-      if(hit)any=true;
-    });
+  var raw=$('q').value.trim(),q=norm(raw).split(' ').filter(Boolean),shown=0;
+  document.querySelectorAll('#menu section').forEach(function(sec){
+    var inGroup=q.length?true:sec.getAttribute('data-g')===group,any=false;
+    sec.querySelectorAll('.row,.addons').forEach(function(r){var hit=!q.length||matches(q,r.getAttribute('data-s'));r.style.display=hit?'':'none';if(hit)any=true});
     sec.querySelectorAll('.card').forEach(function(c){c.style.display=Array.prototype.some.call(c.querySelectorAll('.row'),function(r){return r.style.display!=='none'})?'':'none'});
     sec.querySelectorAll('.sub-h').forEach(function(h){var c=h.nextElementSibling;h.style.display=c&&c.style.display==='none'?'none':''});
-    var show=inGroup&&any;
-    sec.style.display=show?'':'none';
-    if(show)shown++;
+    var show=inGroup&&any;sec.style.display=show?'':'none';if(show)shown++;
   });
-  chipsEl.style.display=q?'none':'';
-  emptyEl.style.display=shown?'none':'block';
+  $('chips').style.display=q.length?'none':'';
+  $('empty').style.display=shown?'none':'block';
 }
-function setGroup(g){
-  group=g;
-  document.getElementById('tab-food').setAttribute('aria-pressed',g==='food');
-  document.getElementById('tab-drinks').setAttribute('aria-pressed',g==='drinks');
-  buildChips();apply();window.scrollTo(0,0);setActive();
-}
+
+/* ===== Section chips ===== */
 function stickH(){return document.querySelector('.sticky').offsetHeight}
 function syncStick(){document.documentElement.style.setProperty('--stick',stickH()+'px')}
 function setActive(){
-  var secs=Array.prototype.filter.call(document.querySelectorAll('section'),function(s){return s.style.display!=='none'});
-  var cur=null;
-  var lim=stickH()+24;
+  var secs=Array.prototype.filter.call(document.querySelectorAll('#menu section'),function(s){return s.style.display!=='none'});
+  var cur=null,lim=stickH()+24;
   secs.forEach(function(s){if(s.getBoundingClientRect().top<=lim)cur=s.id});
   if(!cur&&secs.length)cur=secs[0].id;
   if(secs.length&&window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2)cur=secs[secs.length-1].id;
-  chipsEl.querySelectorAll('.chip').forEach(function(c){
-    var on=c.getAttribute('data-id')===cur;
-    c.classList.toggle('on',on);
-    if(on&&c.scrollIntoView){var box=chipsEl.getBoundingClientRect(),cb=c.getBoundingClientRect();if(cb.left<box.left||cb.right>box.right){chipsEl.scrollLeft+=cb.left-box.left-16}}
+  var box=$('chips').getBoundingClientRect();
+  $('chips').querySelectorAll('.chip').forEach(function(c){
+    var on=c.getAttribute('data-id')===cur;c.classList.toggle('on',on);
+    if(on){var cb=c.getBoundingClientRect();if(cb.left<box.left||cb.right>box.right)$('chips').scrollLeft+=cb.left-box.left-16}
   });
 }
-chipsEl.addEventListener('click',function(e){
-  var b=e.target.closest('.chip');if(!b)return;
-  var t=document.getElementById(b.getAttribute('data-id'));
-  if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+function setGroup(g){
+  group=g;$('tab-food').setAttribute('aria-pressed',g==='food');$('tab-drinks').setAttribute('aria-pressed',g==='drinks');
+  buildChips();apply();window.scrollTo(0,0);setActive();
+}
+function refresh(){render();buildChips();apply();syncStick();setActive();renderCart()}
+
+/* ===== Order ===== */
+function cartKey(x){return x.ctx+'|'+x.n+'|'+x.size}
+function saveCart(){store('rb-cart',JSON.stringify(cart))}
+function reconcile(){/* keep the cart in step with the current prices */
+  var cur={};ITEMS.forEach(function(x){cur[cartKey(x)]=x});
+  Object.keys(cart).forEach(function(k){if(cur[k])cart[k].price=cur[k].price;else if(mode==='online')delete cart[k]});saveCart();
+}
+function cartList(){return Object.keys(cart).map(function(k){return cart[k]})}
+function totals(){var n=0,t=0;cartList().forEach(function(x){n+=x.qty;t+=x.qty*x.price});return {n:n,t:t}}
+function label(x){return x.n+(x.size?', '+x.size:'')}
+function renderCart(){
+  var T=totals(),show=T.n>0&&mode==='online';
+  $('bar').classList.toggle('show',show);document.body.classList.toggle('has-bar',show);
+  $('bar-count').textContent=T.n;$('bar-total').textContent=peso(T.t);$('order-total').textContent=peso(T.t);
+  var l=cartList();
+  $('order-list').innerHTML=l.length?l.map(function(x){var k=esc(cartKey(x));return '<div class="oi"><div class="t"><span class="n">'+esc(label(x))+'</span><span class="d">'+esc(x.ctx)+' &middot; '+peso(x.price)+' each</span></div><div class="qty"><button type="button" data-k="'+k+'" data-d="-1" aria-label="One less '+esc(x.n)+'">&minus;</button><span>'+x.qty+'</span><button type="button" data-k="'+k+'" data-d="1" aria-label="One more '+esc(x.n)+'">+</button></div><span class="lt">'+peso(x.qty*x.price)+'</span></div>'}).join(''):'<p class="fine" style="padding:16px 0">Your order is empty. Tap a price on the menu to add it.</p>';
+}
+var toastT;
+function toast(msg){var t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},1600)}
+function add(i,btn){
+  var x=ITEMS[i];if(!x)return;var k=cartKey(x);
+  if(cart[k])cart[k].qty++;else cart[k]={n:x.n,size:x.size,price:x.price,ctx:x.ctx,qty:1};
+  saveCart();renderCart();toast('Added: '+label(x));
+  btn.classList.remove('bump');void btn.offsetWidth;btn.classList.add('bump');
+}
+function orderText(){
+  var how=(document.querySelector('input[name=how]:checked')||{}).value||'Pickup',T=totals(),lines=['Hi Rainbrew! I\'d like to order:',''];
+  cartList().forEach(function(x){lines.push(x.qty+' × '+label(x)+' ('+x.ctx+') – '+peso(x.qty*x.price))});
+  lines.push('','Total: '+peso(T.t),'For: '+how);
+  var nm=$('o-name').value.trim(),nt=$('o-notes').value.trim();
+  if(nm)lines.push('Name: '+nm);if(nt)lines.push((how==='Delivery'?'Address / notes: ':'Notes: ')+nt);
+  lines.push('','(From the online menu)');
+  return lines.join('\n');
+}
+function copy(text){
+  if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text).then(function(){return true},function(){return legacyCopy(text)});
+  return Promise.resolve(legacyCopy(text));
+}
+function legacyCopy(text){var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();var ok=false;try{ok=document.execCommand('copy')}catch(e){}document.body.removeChild(ta);return ok}
+
+/* ===== Contact ===== */
+function setupContact(){
+  document.querySelectorAll('.msg-link').forEach(function(a){a.href=CONFIG.messenger});
+  document.querySelectorAll('.fb-link').forEach(function(a){a.href=CONFIG.facebook});
+  var li='';
+  if(CONFIG.phone)li+='<li>Phone: <a href="tel:'+esc(CONFIG.phone.replace(/[^\d+]/g,''))+'">'+esc(CONFIG.phone)+'</a></li>';
+  if(CONFIG.address)li+='<li>'+esc(CONFIG.address)+(CONFIG.mapUrl?' &middot; <a href="'+esc(CONFIG.mapUrl)+'" target="_blank" rel="noopener">Map</a>':'')+'</li>';
+  if(CONFIG.hours)li+='<li>Open: '+esc(CONFIG.hours)+'</li>';
+  $('info').innerHTML=li;$('info').hidden=!li;
+}
+
+/* ===== Events ===== */
+$('menu').addEventListener('click',function(e){var b=e.target.closest('.p.add');if(b)add(+b.getAttribute('data-i'),b)});
+$('chips').addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;var t=$(b.getAttribute('data-id'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})});
+$('tab-food').addEventListener('click',function(){setGroup('food')});
+$('tab-drinks').addEventListener('click',function(){setGroup('drinks')});
+$('q').addEventListener('input',function(){apply();syncStick();setActive()});
+$('pricemode').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;mode=b.getAttribute('data-m');this.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});var y=window.scrollY;refresh();window.scrollTo(0,y)});
+$('open-order').addEventListener('click',function(){$('status').textContent='';renderCart();$('order').showModal()});
+$('close-order').addEventListener('click',function(){$('order').close()});
+$('order').addEventListener('click',function(e){if(e.target===this)this.close()});
+$('order-list').addEventListener('click',function(e){var b=e.target.closest('button[data-k]');if(!b)return;var k=b.getAttribute('data-k'),x=cart[k];if(!x)return;x.qty+=+b.getAttribute('data-d');if(x.qty<1)delete cart[k];saveCart();renderCart();if(!cartList().length)$('order').close()});
+document.querySelectorAll('input[name=how]').forEach(function(r){r.addEventListener('change',function(){$('notes-label').textContent=this.value==='Delivery'?'Delivery address and notes':'Notes (optional)'})});
+$('send').addEventListener('click',function(){
+  var text=orderText();
+  window.open(CONFIG.messenger+'?text='+encodeURIComponent(text),'_blank','noopener');
+  copy(text).then(function(ok){$('status').textContent=ok?'Order copied. In the Messenger chat, paste it if it isn\'t there already, then press send.':'Messenger opened. Use "Copy order text", then paste it in the chat.'});
 });
-document.getElementById('tab-food').addEventListener('click',function(){setGroup('food')});
-document.getElementById('tab-drinks').addEventListener('click',function(){setGroup('drinks')});
-qEl.addEventListener('input',function(){apply();syncStick();setActive()});
-var tick=false;
-window.addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){setActive();tick=false})},{passive:true});
-render();buildChips();apply();syncStick();setActive();
+$('copy').addEventListener('click',function(){copy(orderText()).then(function(ok){$('status').textContent=ok?'Order copied. Paste it in Messenger.':'Copy didn\'t work on this device. Please type your order in Messenger.'})});
+$('clear').addEventListener('click',function(){if(!confirm('Clear your whole order?'))return;cart={};saveCart();renderCart();$('order').close()});
+window.addEventListener('scroll',(function(){var tick=false;return function(){if(tick)return;tick=true;requestAnimationFrame(function(){setActive();tick=false})}})(),{passive:true});
 window.addEventListener('resize',function(){syncStick();setActive()});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){syncStick();setActive()});
+
+/* ===== Start ===== */
+function useSheet(csv){
+  var r=null;try{r=fromSheet(csv)}catch(e){r=null}
+  if(!r)return false;
+  DATA=r.menu;hasWalk=r.walk;$('pricemode').hidden=!hasWalk;if(!hasWalk)mode='online';
+  return true;
+}
+setupContact();
+var cached=store('rb-sheet');
+if(cached)useSheet(cached);
+refresh();reconcile();renderCart();
+if(CONFIG.sheetCsv&&window.fetch){
+  var ctl=window.AbortController?new AbortController():null,timer=setTimeout(function(){if(ctl)ctl.abort()},8000);
+  fetch(CONFIG.sheetCsv,{signal:ctl?ctl.signal:undefined,cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(csv){
+    clearTimeout(timer);
+    if(csv===cached)return;
+    if(useSheet(csv)){store('rb-sheet',csv);var y=window.scrollY;refresh();reconcile();renderCart();window.scrollTo(0,y)}
+  }).catch(function(){clearTimeout(timer)});
+}
 </script>
 </body>
 </html>
