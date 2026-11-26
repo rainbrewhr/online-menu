@@ -69,7 +69,8 @@ a{color:inherit}
 .nav{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
 .nav-row{display:flex;align-items:center;gap:8px;padding-top:8px;padding-bottom:6px}
 .seg{flex:1;display:flex;background:var(--soft);border-radius:10px;padding:3px}
-.seg button{flex:1;min-height:44px;border:0;background:none;border-radius:8px;font-weight:700;font-size:15px;color:var(--muted)}
+.seg button{flex:1 1 auto;min-height:44px;padding:0 8px;border:0;background:none;border-radius:8px;font-weight:700;font-size:15px;color:var(--muted);white-space:nowrap}
+#tab-all{flex:0 0 auto;min-width:56px}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .icon-btn{width:44px;height:44px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:var(--soft);color:var(--ink)}
 .search-row{display:flex;align-items:center;gap:8px;padding-top:8px;padding-bottom:6px}
@@ -99,6 +100,7 @@ section h3{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:up
 .name{font-weight:700;font-size:16px;overflow-wrap:anywhere}
 .tag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:4px;font-size:12px;font-weight:700;vertical-align:1px;background:var(--soft);color:var(--ink)}
 .tag.best{background:var(--navy);color:var(--navy-ink)}
+#s-best .tag.best{display:none}
 .desc{margin:2px 0 0;font-size:14px;color:var(--muted)}
 .price{margin-top:4px;font-weight:700;font-variant-numeric:tabular-nums}
 .size{font-weight:500;color:var(--muted)}
@@ -118,6 +120,13 @@ section h3{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:up
 .step span{min-width:20px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
 
 .empty{padding:40px 0;text-align:center;color:var(--muted)}
+.group-h{margin:36px 0 0;padding-bottom:8px;border-bottom:2px solid var(--ink);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.group-h+section{padding-top:16px}
+.again{display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface)}
+.again-t{flex:1;min-width:0}
+.again-t b{display:block}
+.again-t span{display:block;font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.again .btn{width:auto;min-height:44px;font-size:15px}
 
 /* Contact */
 .contact{padding-top:32px}
@@ -196,7 +205,8 @@ legend,.lbl{display:block;font-size:15px;font-weight:700;margin-bottom:6px;paddi
   <div class="wrap">
     <div class="nav-row" id="nav-row">
       <div class="seg" role="group" aria-label="Menu">
-        <button type="button" id="tab-food" aria-pressed="true">Food</button>
+        <button type="button" id="tab-all" aria-pressed="true">All</button>
+        <button type="button" id="tab-food" aria-pressed="false">Food</button>
         <button type="button" id="tab-drinks" aria-pressed="false">Drinks &amp; desserts</button>
       </div>
       <button class="icon-btn" type="button" id="search-open" aria-label="Search the menu">
@@ -213,6 +223,7 @@ legend,.lbl{display:block;font-size:15px;font-weight:700;margin-bottom:6px;paddi
 
 <main class="wrap">
   <div class="notice" id="closed-note" hidden></div>
+  <div class="again" id="again" hidden><div class="again-t"><b>Order again</b><span id="again-sum"></span></div><button class="btn" type="button" id="again-add">Add to order</button></div>
   <div id="menu"></div>
   <div class="empty" id="empty" hidden>
     <p id="empty-txt">No items match your search.</p>
@@ -258,6 +269,7 @@ legend,.lbl{display:block;font-size:15px;font-weight:700;margin-bottom:6px;paddi
       </fieldset>
       <div class="field"><label class="lbl" for="o-name">Your name</label><input id="o-name" type="text" autocomplete="name" enterkeyhint="next"></div>
       <div class="field" id="addr-field" hidden><label class="lbl" for="o-addr">Delivery address</label><textarea id="o-addr" autocomplete="street-address" placeholder="House no., street, barangay, landmark"></textarea><p class="err" id="addr-err" hidden>Please add your delivery address.</p></div>
+      <p class="fine" style="margin-top:8px">Your name and address are saved on this phone for next time.</p>
       <div class="field"><label class="lbl" for="o-notes">Notes <span class="size">(optional)</span></label><textarea id="o-notes" placeholder="Pickup time, less sugar, no onions"></textarea></div>
       <button class="link-btn" type="button" id="clear">Remove all items</button>
     </div>
@@ -443,7 +455,7 @@ function fromSheet(csv){
     var key=norm(cat)+'|'+norm(name),lk={p:on,tags:tags,img:photo};look[key+'|'+norm(size)]=look[key+'|'+norm(size)]||lk;look[key]=look[key]||lk;
     var loc=CAT[cat.toLowerCase()],sec;
     if(loc)sec=byId[loc[0]];
-    else{var id='x-'+norm(cat).replace(/ /g,'-');sec=byId[id];if(!sec){sec={id:id,g:'food',t:cat,items:[],sub:[],add:null};byId[id]=sec;out.push(sec)}loc=[id]}
+    else{var id='x-'+norm(cat).replace(/ /g,'-');sec=byId[id];if(!sec){sec={id:id,g:'food',t:cat,items:[],sub:[],add:null};byId[id]=sec;var di=out.length;for(var q2=0;q2<out.length;q2++)if(out[q2].g==='drinks'){di=q2;break}out.splice(di,0,sec)}loc=[id]}
     if(loc[2]){if(!sec.add)sec.add={h:'Add-ons',l:[]};sec.add.l.push({n:name,p:[on],tags:tags});continue}
     var list=sec.items;
     if(loc[1]){var b=null;sec.sub.forEach(function(x){if(x.h===loc[1])b=x});if(!b){b={h:loc[1],items:[]};sec.sub.push(b)}list=b.items}
@@ -463,7 +475,7 @@ function fromSheet(csv){
 }
 
 /* ===== State ===== */
-var BASE=MENU,DATA=MENU,group='food',ORDERING=isOpen(),OPTS=[],cart={};
+var BASE=MENU,DATA=MENU,group='all',ORDERING=isOpen(),OPTS=[],cart={};
 try{cart=JSON.parse(store('rb-cart')||'{}')||{}}catch(e){cart={}}
 
 /* ===== Menu ===== */
@@ -494,10 +506,15 @@ function itemHtml(it,cols,ctx,extra){
   return h;
 }
 function render(){
-  OPTS=[];var html='';
+  OPTS=[];var html='',lastG='';
+  /* Best sellers: items tagged "Best seller" in the sheet, shown first in All */
+  var best=[];
+  DATA.forEach(function(s){if(s.id==='specials')return;function scan(items,ctx){(items||[]).forEach(function(i){if((i.tags||[]).some(function(t){return t==='best seller'||t==='bestseller'}))best.push({it:i,cols:s.cols,ctx:ctx})})}scan(s.items,s.t);(s.sub||[]).forEach(function(b){scan(b.items,s.t+' – '+b.h)})});
+  if(best.length)html+='<section id="s-best" data-g="all"><h2>Best sellers</h2><ul class="items">'+best.map(function(b){return itemHtml(b.it,b.cols,b.ctx)}).join('')+'</ul></section>';
   DATA.forEach(function(s){
     var subs=(s.sub||[]).filter(function(b){return b.items.length}),adds=s.add&&s.add.l.length?s.add.l:null;
     if(!(s.items&&s.items.length)&&!subs.length&&!adds)return;
+    if(s.g!==lastG){lastG=s.g;html+='<p class="group-h" data-g="'+s.g+'">'+(s.g==='drinks'?'Drinks &amp; desserts':'Food')+'</p>'}
     html+='<section id="s-'+s.id+'" data-g="'+s.g+'"><h2>'+esc(s.t)+'</h2>'+(s.note?'<p class="note">'+esc(s.note)+'</p>':'');
     if(s.items&&s.items.length)html+='<ul class="items">'+s.items.map(function(i){return itemHtml(i,s.cols,s.t)}).join('')+'</ul>';
     subs.forEach(function(b){html+='<div class="grp"><h3>'+esc(b.h)+'</h3><ul class="items">'+b.items.map(function(i){return itemHtml(i,s.cols,s.t+' – '+b.h,b.h)}).join('')+'</ul></div>'});
@@ -520,7 +537,7 @@ function paintControls(){
   });
 }
 function buildCats(){
-  var secs=Array.prototype.filter.call(document.querySelectorAll('#menu section'),function(s){return s.getAttribute('data-g')===group});
+  var secs=Array.prototype.filter.call(document.querySelectorAll('#menu section'),function(s){return group==='all'||s.getAttribute('data-g')===group});
   $('cats').innerHTML=secs.map(function(s){return '<button type="button" class="cat" data-id="'+s.id+'">'+esc(s.querySelector('h2').textContent)+'</button>'}).join('');
 }
 
@@ -540,9 +557,11 @@ function apply(){
     sec.querySelectorAll('.item').forEach(function(r){var toks=r.getAttribute('data-s').split(' '),hit=!searching||q.every(function(w){return wordHit(w,toks)});r.hidden=!hit;if(hit)any=true});
     sec.querySelectorAll('.grp').forEach(function(g){g.hidden=!g.querySelector('.item:not([hidden])')});
     sec.querySelectorAll(':scope > .items').forEach(function(u){u.hidden=!u.querySelector('.item:not([hidden])')});
-    var show=(searching?true:sec.getAttribute('data-g')===group)&&any;sec.hidden=!show;if(show)shown++;
+    var g=sec.getAttribute('data-g'),show=(searching?sec.id!=='s-best':(group==='all'||g===group))&&any;sec.hidden=!show;if(show)shown++;
   });
+  document.querySelectorAll('#menu .group-h').forEach(function(h){h.hidden=!!searching||group!=='all'||!document.querySelector('#menu section[data-g="'+h.getAttribute('data-g')+'"]:not([hidden])')});
   $('cats').hidden=!!searching;
+  paintAgain();
   $('empty').hidden=!!shown;
   $('empty-txt').textContent=searching?'Nothing matches “'+$('q').value.trim()+'”. Try another word.':'';
 }
@@ -552,7 +571,7 @@ function navH(){return $('nav').offsetHeight}
 function syncNav(){document.documentElement.style.setProperty('--nav',navH()+'px')}
 function setActive(){
   var secs=Array.prototype.filter.call(document.querySelectorAll('#menu section'),function(s){return !s.hidden});
-  var cur=null,lim=navH()+30;
+  var cur=null,lim=navH()+60;
   secs.forEach(function(s){if(s.getBoundingClientRect().top<=lim)cur=s.id});
   if(!cur&&secs.length)cur=secs[0].id;
   if(secs.length&&window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4)cur=secs[secs.length-1].id;
@@ -563,7 +582,7 @@ function setActive(){
   });
 }
 function setGroup(g){
-  group=g;$('tab-food').setAttribute('aria-pressed',g==='food');$('tab-drinks').setAttribute('aria-pressed',g==='drinks');
+  group=g;['all','food','drinks'].forEach(function(x){$('tab-'+x).setAttribute('aria-pressed',g===x)});
   buildCats();apply();var top=$('nav').offsetTop;if(window.scrollY>top)window.scrollTo(0,top);setActive();
 }
 
@@ -629,6 +648,22 @@ function closeSheet(){$('order').close()}
 var toastT;
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},1500)}
 
+/* ===== Order again and saved details ===== */
+var last=null;try{last=JSON.parse(store('rb-last')||'null')}catch(e){last=null}
+function paintAgain(){
+  var searching=!$('search-row').hidden&&$('q').value.trim();
+  if(!last||!last.length||!ORDERING||searching){$('again').hidden=true;return}
+  $('again').hidden=false;
+  $('again-sum').textContent=last.map(function(x){return x.qty+' × '+x.n+(x.size?' ('+x.size+')':'')}).join(', ');
+}
+function prefill(){
+  var me=null;try{me=JSON.parse(store('rb-me')||'null')}catch(e){}
+  if(!me)return;
+  if(me.name)$('o-name').value=me.name;
+  if(me.addr)$('o-addr').value=me.addr;
+  if(me.how==='Delivery'){var r=document.querySelector('input[name=how][value=Delivery]');if(r)r.checked=true;$('addr-field').hidden=false}
+}
+
 /* ===== Contact ===== */
 function paintContact(){
   var h='<li><a href="'+esc(CONFIG.messenger)+'" target="_blank" rel="noopener">'+ICON.chat+'<span class="l"><b>Message us on Messenger</b><span>Orders and questions</span></span></a></li>';
@@ -645,6 +680,7 @@ $('menu').addEventListener('click',function(e){
   change(OPTS[+c.getAttribute('data-o')],+b.getAttribute('data-a'));
 });
 $('cats').addEventListener('click',function(e){var b=e.target.closest('.cat');if(!b)return;var t=$(b.getAttribute('data-id'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})});
+$('tab-all').addEventListener('click',function(){setGroup('all')});
 $('tab-food').addEventListener('click',function(){setGroup('food')});
 $('tab-drinks').addEventListener('click',function(){setGroup('drinks')});
 $('search-open').addEventListener('click',function(){$('nav-row').hidden=true;$('search-row').hidden=false;$('q').focus();apply();syncNav()});
@@ -667,28 +703,37 @@ $('send').addEventListener('click',function(){
   if(!ORDERING){paintSheet();return}
   if(how()==='Delivery'&&!$('o-addr').value.trim()){$('addr-field').classList.add('bad');$('addr-err').hidden=false;$('o-addr').focus();return}
   var text=orderText();
+  store('rb-me',JSON.stringify({name:$('o-name').value.trim(),how:how(),addr:$('o-addr').value.trim()}));
+  last=list().map(function(x){return {n:x.n,size:x.size,ctx:x.ctx,qty:x.qty}});store('rb-last',JSON.stringify(last));
   /* Copy first, while the page still has focus (needed on iPhone), then open Messenger */
   var copied=copy(text);
   window.open(messengerUrl(text),'_blank','noopener');
   $('copybox').value=text;$('reopen').href=messengerUrl(text);showStep(true);
   copied.then(function(ok){$('copied-line').innerHTML=ok?'Your order is copied.':'Copy your order from the box below: press and hold, then <b>Select all</b> and <b>Copy</b>.'});
 });
+$('again-add').addEventListener('click',function(){
+  if(!ORDERING||!last)return;
+  var cur={},n=0;OPTS.forEach(function(o){if(!o.sold)cur[key(o)]=o});
+  last.forEach(function(x){var o=cur[key(x)];if(!o)return;var k=key(o);if(!cart[k])cart[k]={n:o.n,size:o.size,price:o.price,ctx:o.ctx,qty:0};cart[k].qty+=x.qty;n+=x.qty});
+  save();paintControls();paintBar();
+  toast(n?'Added '+n+' item'+(n>1?'s':'')+' from your last order':'Those items aren\'t available right now');
+});
 $('copy-again').addEventListener('click',function(){copy($('copybox').value).then(function(ok){toast(ok?'Order copied':'Press and hold the text to copy it')})});
-$('done').addEventListener('click',function(){cart={};save();paintControls();paintBar();$('o-notes').value='';$('o-addr').value='';closeSheet();toast('Thanks! We\'ll reply on Messenger.')});
+$('done').addEventListener('click',function(){cart={};save();paintControls();paintBar();paintAgain();$('o-notes').value='';$('o-addr').value='';closeSheet();toast('Thanks! We\'ll reply on Messenger.')});
 $('clear').addEventListener('click',function(){if(!confirm('Remove all items from your order?'))return;cart={};save();paintControls();paintBar();closeSheet()});
 
 window.addEventListener('scroll',(function(){var tick=false;return function(){if(tick)return;tick=true;requestAnimationFrame(function(){setActive();tick=false})}})(),{passive:true});
 window.addEventListener('resize',function(){syncNav();setActive()});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){syncNav();setActive()});
 /* Re-check the ordering hours every minute and when the page comes back into view */
-function tickHours(){var o=isOpen();if(o!==ORDERING){ORDERING=o;paintHours();paintControls();if($('order').open)paintSheet()}}
+function tickHours(){var o=isOpen();if(o!==ORDERING){ORDERING=o;paintHours();paintControls();paintAgain();if($('order').open)paintSheet()}}
 setInterval(tickHours,60000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)tickHours()});
 
 /* ===== Start ===== */
 function refresh(){render();buildCats();apply();syncNav();setActive();reconcile();paintControls();paintBar()}
 function useSheet(csv){var r=null;try{r=fromSheet(csv)}catch(e){}if(!r)return false;DATA=r;return true}
-paintHours();paintContact();
+paintHours();paintContact();prefill();
 var cached=store('rb-sheet');if(cached)useSheet(cached);
 refresh();
 if(CONFIG.sheetCsv&&window.fetch){
