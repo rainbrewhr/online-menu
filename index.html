@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rainbrew Online Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: sticky brand bar with search and category chips; one long scroll of dotted-leader price rows, two price columns where a size or serving applies. */
+:root{
+  --bg:#fff8f4;
+  --surface:#ffffff;
+  --ink:#2b1b1f;
+  --muted:#7b6469;
+  --accent:#e8381f;
+  --accent-ink:#ffffff;
+  --navy:#1d1c52;
+  --line:#f0dcd6;
+  --soft:#ffe9e1;
+  --display:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1315;
+    --surface:#261b1e;
+    --ink:#fbeee9;
+    --muted:#b89fa4;
+    --accent:#ff6a4d;
+    --accent-ink:#2b0f0a;
+    --navy:#c9c8ff;
+    --line:#3d2b2f;
+    --soft:#3a2326;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1315;
+  --surface:#261b1e;
+  --ink:#fbeee9;
+  --muted:#b89fa4;
+  --accent:#ff6a4d;
+  --accent-ink:#2b0f0a;
+  --navy:#c9c8ff;
+  --line:#3d2b2f;
+  --soft:#3a2326;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+.stripe{height:6px;background:linear-gradient(90deg,#ff4d4d,#ff9a3d,#ffd23d,#5ccf6e,#3da9ff,#8a5cff,#ff5cc8)}
+header.brand{padding:18px 16px 6px;max-width:760px;margin:0 auto}
+.wordmark{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;margin:0;letter-spacing:.5px;display:flex;flex-wrap:wrap}
+.wordmark span:nth-child(1){color:#ff4d4d}.wordmark span:nth-child(2){color:#ff8a2b}.wordmark span:nth-child(3){color:#e8b400}.wordmark span:nth-child(4){color:#3fb556}.wordmark span:nth-child(5){color:#2e93ee}.wordmark span:nth-child(6){color:#7a4df0}.wordmark span:nth-child(7){color:#e84db3}
+.sub{margin:6px 0 0;color:var(--muted);font-size:14px}
+.sticky{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+.sticky-in{max-width:760px;margin:0 auto;padding:10px 16px 8px}
+.search{position:relative}
+.search input{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:11px 14px 11px 40px;outline:none}
+.search input:focus-visible{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.tabs{display:flex;gap:8px;margin:10px 0 8px}
+.tab{flex:1;font:inherit;font-weight:700;font-size:15px;padding:9px 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--bg)}
+.tab:focus-visible,.chip:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;font:inherit;font-size:14px;font-weight:500;padding:6px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+main{max-width:760px;margin:0 auto;padding:6px 16px 40px}
+section{scroll-margin-top:calc(var(--stick,170px) + 12px);margin-top:26px}
+section h2{font-family:var(--display);font-weight:600;font-size:28px;line-height:1.15;margin:0;color:var(--navy);text-wrap:balance}
+section .note{margin:4px 0 0;color:var(--muted);font-size:14px}
+.card{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:6px 16px}
+.colhead{display:flex;justify-content:flex-end;gap:0;padding:10px 0 4px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.colhead span,.row .p{min-width:64px;text-align:right}
+.row{display:flex;align-items:baseline;gap:10px;padding:11px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.row .t{flex:1;min-width:0}
+.row .n{font-weight:500;overflow-wrap:anywhere}
+.row .d{display:block;font-size:13.5px;color:var(--muted);margin-top:1px}
+.row .p{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .p.none{color:var(--muted);font-weight:400}
+.sub-h{font-family:var(--display);font-weight:600;font-size:18px;margin:16px 0 0;color:var(--accent)}
+.addons{margin-top:12px;background:var(--soft);border-radius:14px;padding:12px 16px}
+.addons h3{margin:0 0 6px;font-family:var(--display);font-size:17px;font-weight:600}
+.addons ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14.5px}
+.addons li b{font-variant-numeric:tabular-nums}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px 0}
+footer{max-width:760px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:13px}
+footer p{margin:4px 0}
+@media (min-width:640px){
+  .wordmark{font-size:60px}
+  .row .p,.colhead span{min-width:78px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="stripe"></div>
+<header class="brand">
+  <h1 class="wordmark" aria-label="Rainbrew"><span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>r</span><span>e</span><span>w</span></h1>
+  <p class="sub">Coffee Shop &middot; Online menu &middot; Prices in pesos (₱)</p>
+</header>
+<div class="sticky">
+  <div class="sticky-in">
+    <label class="search" for="q">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search the menu, e.g. pizza, latte" autocomplete="off" aria-label="Search the menu">
+    </label>
+    <div class="tabs" role="group" aria-label="Menu type">
+      <button class="tab" id="tab-food" type="button" aria-pressed="true">Food</button>
+      <button class="tab" id="tab-drinks" type="button" aria-pressed="false">Drinks &amp; desserts</button>
+    </div>
+    <nav class="chips" id="chips" aria-label="Menu sections"></nav>
+  </div>
+</div>
+<main id="menu"></main>
+<p class="empty" id="empty">No match. Try another word.</p>
+<footer>
+  <p>Prices are for online orders and may change without notice.</p>
+  <p>Facebook: RainbrewCoffeeShop &middot; Menu updated November 26, 2026.</p>
+</footer>
+<script>
+function I(n,p,d){return {n:n,p:Array.isArray(p)?p:[p],d:d||''}}
+var MENU=[
+{id:'specials',g:'food',t:'Must Try Specials',note:'New and improved',items:[
+ I('Sweet & Sour Pork Fillet',148,'Crispy pork fillet tossed in a rich sweet and sour sauce with a perfect balance of tangy and savory flavors.'),
+ I('Spanish Latte Float',188,'Creamy Spanish latte topped with an ice cream float and drizzled with rich chocolate fudge.'),
+ I('Iced Vanilla Oat',160,'Smooth espresso with oat milk and vanilla syrup for a warm, velvety sip.'),
+ I('Siomai',78,'Improved pork siomai with a richer savory taste and perfectly tender texture.'),
+ I('Mango Tapioca',98,'Creamy mango drink with chewy tapioca pearls, topped with cream and real mango chunks.'),
+ I('Cucumber Calamansi',95,'A smooth, crisp, and citrusy cucumber refresher perfect for hot days.')]},
+{id:'main',g:'food',t:'Main Course',note:'Platter',items:[
+ I('Baby Backribs',338),I('KBL',248,'Kadyos, Baboy at Langka'),I('Bangus Sinigang',278),I('Sizzling Bangus',298),I('Pork Sinigang',278),I('Sizzling Pork Sisig',278),I('Pork Belly',308),I('Crispy Pork Kare-Kare',299),I('Beef Kare-Kare',328),I('Lumpiang Shanghai (10 pcs)',178),I('Beef Broccoli',368),I('Sweet & Sour Fish Fillet',228),I('Buffalo Wings',278),I('Bangus Sisig',308)],
+ sub:[{h:'Salad',items:[I('Caesar Salad',238),I('Chef Garden',238)]},{h:'Vegies',items:[I('Chopsuey',248),I('Buttered Vegies',228)]}]},
+{id:'rice',g:'food',t:'Rice Meals',items:[
+ I('Fried Chicken',108),I('Chicken Cordon Bleu',138),I('Chicken Ala King',148),I('Buffalo Wings',168),I('Beefy Omelette',118),I('Bangus Sinigang',158),I('Sweet & Sour Fish Fillet',148),I('Sizzling Bangus',168),I('Pork Belly',158),I('KBL',198,'Kadyos, Baboy at Langka'),I('Pork Sinigang',188),I('Sizzling Pork Sisig',148),I('Baby Backribs',198),I('Beef Kare-Kare',198),I('Crispy Pork Kare-Kare',179),I('Sweet & Sour Pork Fillet',148)]},
+{id:'silog',g:'food',t:'Silog Meals',items:[
+ I('Beef Tapa w/ Egg',128),I('Chorizo w/ Egg',108),I('Bacon w/ Egg',118),I('Hotdog w/ Egg',118),I('Hungarian Cheesy w/ Egg',148),I('Corned Beef w/ Egg',118),I('Tocino w/ Egg',118),I('Spam w/ Egg',118),I('Pork Shanghai w/ Egg',118),I('Burger Steak w/ Egg',148)]},
+{id:'nuggets',g:'food',t:'Nuggets & Pancakes',items:[
+ I('CNS 1',128,'4 pcs nuggets, egg & rice'),I('CNS 2',178,'12 pcs chicken nuggets'),I('CNS 3',178,'6 pcs nuggets, fries & lemonade'),I('CNS 4',218,'4 pcs nuggets, fries, fried chicken & lemonade'),I('Pancake (2 pcs)',98),I('Pancake, Bacon & Egg',168)],
+ add:{h:'Pancake add-ons',l:[['Chocolate syrup',20],['Caramel syrup',20],['Strawberry syrup',20]]}},
+{id:'chicken',g:'food',t:'Chicken Fillet',note:'Choose your flavor',items:[
+ I('Honey Buttered Garlic',139),I('Butter Parmesan',149),I('Salted Egg',129),I('Spicy',119),I('Sweet & Sour',139),I('BBQ',139),I('Lemon Glaze',139),I('Teriyaki',149),I('Snow Cheese',139)]},
+{id:'pasta',g:'food',t:'Pasta',items:[
+ I('Palabok',128),I('Spaghetti',128),I('Carbonara',128),I('Spicy Mackerel Garlic Pasta',178),I('Chicken Pesto Pasta',178)]},
+{id:'snacks',g:'food',t:'Snacks',items:[
+ I('NachoFries',128),I('French Fries',88),I('Flavored Fries',98,'Cheese, BBQ or Sour Cream'),I('Friestops',118),I('Hashtops',118)]},
+{id:'short',g:'food',t:'Short Order',items:[
+ I('Siomai (Fried or Steamed)',78),I('Lomi',108),I('Pancit Molo',108),I('Bihon Guisado',199),I('Pancit Guisado',199),I('Sotanghon Guisado',208),I('Siopao',78)]},
+{id:'pizza',g:'food',t:'Pizza',cols:['10"','12"'],items:[
+ I('Rainbrew Overload',[320,380]),I('Cheesy Beef',[270,330]),I('Pepperoni',[270,330]),I('Hawaiian',[260,320]),I('Cheesy Cheese',[260,320]),I("Vegetarian's Delight",[260,320]),I('Ham and Cheese',[260,320]),I('Cheesy Tuna',[241,301]),I('Burger and Cheese',[280,340]),I('Spam & Cheese',[300,360]),I('Ham & Bacon',[300,360]),I('Chicken Pesto',[300,360]),I('Quadro Feast',[null,380])],
+ add:{h:'Pizza add-ons',l:[['Mozzarella',65],['Pepperoni',65],['Vegetables',65],['Ham',65],['Meat',65]]}},
+{id:'barkada',g:'food',t:'Barkada Meals',items:[
+ I('BM1',468,'3 Hamburger, Fries & Nachos'),I('BM2',428,'2 Hamburger, Nachofries, Buffalo Wings'),I('BM3',478,'Nachofries, Bihon Guisado, 8 pcs Siomai'),I('BM4',478,'BLT Sandwich, Fries, 8 pcs Siomai'),I('BM5',548,'Hawaiian Pizza, Buffalo Wings, Fries'),I('BM6',598,'Hawaiian Pizza, Clubhouse Deluxe, Nachofries'),I('BM7',623,'Bihon Guisado, 3 Siopao, 8 Fried Siomai, Kropek, 1L Iced Tea')]},
+{id:'sandwich',g:'food',t:'Sandwiches',items:[
+ I('Hotdog Sandwich',108),I('Bacon & Egg Sandwich',128),I('Bacon, Lettuce & Tomato (BLT)',128),I('Tuna Sandwich',108),I('Chicken Sandwich',128),I('Spam & Egg Sandwich',128),I('Clubhouse Sandwich',128),I('Clubhouse Deluxe',228)]},
+{id:'burgers',g:'food',t:'Burgers',items:[
+ I('Hamburger',98),I('Cheese Burger',108),I('Hawaiian Burger',118),I('Burger w/ Egg',118),I('Bacon Cheesy Burger',155),I('Double Patty Cheese Burger',168)]},
+{id:'combo',g:'food',t:'Combo Meals',note:'Served with lemonade',items:[
+ I('CM1',148,'Hamburger & Fries'),I('CM2',158,'Cheeseburger & Fries'),I('CM3',138,'Hotdog Sandwich & Fries'),I('CM4',178,'Spaghetti & Fried Chicken'),I('CM5',198,'Spaghetti, Fried Chicken & Pizza'),I('CM6',188,'Spaghetti, Fried Chicken & Rice'),I('CM7',188,'Carbonara & Fried Chicken'),I('CM8',208,'Carbonara, Fried Chicken & Pizza'),I('CM9',208,'Carbonara, Fried Chicken & Rice'),I('CM10',178,'Palabok & Fried Chicken'),I('CM11',208,'Palabok, Fried Chicken & Rice')]},
+{id:'friedrice',g:'food',t:'Fried Rice',items:[
+ I('Kimchi Rice w/ Egg',108),I('Beef Fried Rice',108)],
+ add:{h:'Rice add-ons',l:[['Egg (Beef Fried Rice)',25],['Spam',55],['Lumpia 3 pcs',55],['Fried Siomai 3 pcs',55],['Steamed Siomai 3 pcs',55],['Bacon',50],['Chorizo',50],['Fried Chicken',78],['Tocino',50],['Tapa',50],['Fried Rice (Platter), Beef Fried Rice',248]]}},
+{id:'korean',g:'food',t:'Korean Dishes',items:[
+ I('Jeyuk Bokkeum',228),I('Tteokbokki',178),I('Rabokki',208),I('Ramen',138),I('Kimchi Tub',208,'450 grams')]},
+
+{id:'coffee',g:'drinks',t:'Coffee',cols:['Hot 12 oz','Iced 16 oz'],items:[
+ I('Espresso Shot',[98,null],'Rich, bold espresso'),I('Americano',[105,115],'Smooth espresso with water'),I('Cappuccino',[125,135],'Creamy espresso with milk foam'),I('Spanish Latte',[125,135],'Smooth espresso with sweet milk'),I('Mocha',[125,135],'Rich espresso with chocolate'),I('Cafe Latte',[125,135],'Smooth espresso with steamed milk'),I('White Mocha',[140,150],'Creamy espresso with white chocolate'),I('Caramel Macchiato',[125,135],'Smooth vanilla milk with caramel'),I('Matcha Espresso',[155,165],'Earthy matcha with bold espresso'),I('Matcha Latte',[125,135],'Creamy matcha with milk'),I('Chocolate',[110,120],'Rich cocoa with milk'),I('Hazelnut Latte',[125,135],'Aromatic espresso with hazelnut'),I('Macadamia Nut Latte',[125,135],'Smooth espresso with buttery macadamia'),I('Roasted Almond Latte',[125,135],'Rich espresso with toasted almond'),I('Vanilla Oat',[135,145],'Espresso with vanilla and oat milk'),I('Biscoff Latte',[null,168],'Creamy espresso with caramelized Biscoff'),I('Seasalt Latte',[null,175],'Espresso latte with sea salt cream'),I('Mango Matcha',[null,165],'Earthy matcha with sweet mango'),I('Spraken Drink',[null,168],'Seasalt matcha with Oreo'),I('Taro Seasalt Cloud',[null,130],'Creamy taro with sea salt cream and cinnamon'),I('Spanish Latte Float',[null,188],'Spanish latte with vanilla soft serve')]},
+{id:'frappe',g:'drinks',t:'Frappe',cols:['Grande 16 oz','Venti 22 oz'],sub:[
+ {h:'Coffee based',items:[I('Coffee Crumble',[175,190]),I('Mocha',[170,185]),I('Caramel Macchiato',[180,190]),I('Salted Caramel',[170,185]),I('Coffee Jelly',[180,195]),I('Matcha Espresso',[175,190])]},
+ {h:'Cream based',items:[I('Chocolate',[155,170]),I('Rocky Road',[145,165]),I('White Chocolate',[170,185]),I('Matcha Green Tea',[160,175]),I('Cookies & Cream',[160,175]),I('Nata Strawberry',[165,180]),I('Triple Chocolate',[null,175]),I('Biscoff',[null,198])]}]},
+{id:'milkshake',g:'drinks',t:'Milkshake Overload',items:[
+ I('Cookies & Cream Overload',98),I('Rocky Road Overload',98),I('Choco Mousse Overload',98),I('Mocha Overload',98),I('Strawberry Overload',98),I('Black Forest Overload',98),I('Melon Overload',98)]},
+{id:'shake',g:'drinks',t:'Fresh Fruit Shake',items:[
+ I('Mango',95),I('Avocado',95),I('Mango Graham',188),I('Avocado Graham',188),I('Dragon Fruit',95),I('Buko',95),I('Melon',95),I('Lychee',90),I('Corn',90),I('Banana',85),I('Cucumber Melon',95),I('Cucumber Calamansi',95),I('Bukomelon',95),I('Banana Strawberry',95),I('Banana Chocolate',95),I('Strawberry',95),I('Blueberry',95),I('Cucumber',90),I('Dragon Fruit Taro',150)]},
+{id:'milktea',g:'drinks',t:'Milk Tea',cols:['Grande','Venti'],sub:[
+ {h:'Classic milk tea',items:[I('Wintermelon',[98,128]),I('Okinawa',[98,128]),I('Hokkaido',[98,128]),I('Taro',[98,128]),I('Oreo',[98,128]),I('Matcha',[98,128]),I('Blueberry',[98,128]),I('Strawberry',[98,128]),I('Mango',[98,128]),I('Lychee',[98,128]),I('Banana',[98,128]),I('Chocolate',[98,128]),I('Roasted Okinawa',[98,128])]},
+ {h:'Cream cheese milk tea',items:[I('Oreo',[118,148]),I('Okinawa',[118,148]),I('Hokkaido',[118,148]),I('Taro',[118,148]),I('Matcha',[118,148]),I('Wintermelon',[118,148]),I('Blueberry',[118,148]),I('Strawberry',[118,148]),I('Mango',[118,148]),I('Lychee',[118,148])]}],
+ add:{h:'Add-ons +20',l:[['Black pearl',''],['Nata de coco',''],['Cream cheese',''],['Rainbow jelly',''],['Coffee jelly',''],['Yogurt',''],['Popping boba (lychee, blueberry, strawberry, mango)','']]}},
+{id:'fruittea',g:'drinks',t:'Fruit Tea',cols:['Grande','Venti'],sub:[
+ {h:'Fruit tea',items:[I('Passion Fruit',[78,98]),I('Green Apple',[78,98]),I('Kiwi',[78,98]),I('Mango',[78,98]),I('Strawberry',[78,98]),I('Blueberry',[78,98]),I('Lemon',[78,98]),I('Lychee',[78,98])]},
+ {h:'Yogurt fruit tea',items:[I('Passion Fruit',[98,118]),I('Green Apple',[98,118]),I('Kiwi',[98,118]),I('Mango',[98,118]),I('Strawberry',[98,118]),I('Blueberry',[98,118]),I('Lemon',[98,118])]}]},
+{id:'drinks',g:'drinks',t:'Drinks',items:[
+ I('Blue Lemonade',40),I('Cucumber Lemonade',40),I('Lychee Lemonade',40),I('Iced Tea',40),I('Pineapple Lemonade',40),I('Softdrinks 12 oz',35),I('Bottled Water',25),I('Hot Calamansi',45),I('Softdrinks 1.5 L',125),I('Soda Pop',75,'Green Apple, Strawberry, Blueberry, Mango or Lemon Yakult')]},
+{id:'desserts',g:'drinks',t:'Desserts',items:[
+ I('Black Sambo',68),I('Halo-Halo',118,'Halo-Halo Special: the fullest, creamiest'),I('Mais con Yelo',98),I('Saging con Yelo',98),I('Mango Tapioca Dream',98)]},
+{id:'softserve',g:'drinks',t:'Soft Serve Dreams',note:'Add ₱15 to upsize',items:[
+ I('Choco Fudge',38),I('Biscoff',68),I('Caramel',38),I('Oreo',48),I('Strawberry',38)]}
+];
+
+var menuEl=document.getElementById('menu'),chipsEl=document.getElementById('chips'),emptyEl=document.getElementById('empty'),qEl=document.getElementById('q');
+var group='food';
+function peso(v){return v===null||v===''?null:'₱'+v}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function rowHtml(it,cols,grp){
+  var ps=it.p.map(function(v){var s=peso(v);return s?'<span class="p">'+s+'</span>':'<span class="p none">&ndash;</span>'}).join('');
+  return '<div class="row" data-s="'+esc((it.n+' '+it.d+' '+(grp||'')).toLowerCase())+'"><div class="t"><span class="n">'+esc(it.n)+'</span>'+(it.d?'<span class="d">'+esc(it.d)+'</span>':'')+'</div>'+ps+'</div>';
+}
+function colHead(cols){return cols?'<div class="colhead">'+cols.map(function(c){return '<span>'+esc(c)+'</span>'}).join('')+'</div>':''}
+function render(){
+  var html='';
+  MENU.forEach(function(s){
+    html+='<section id="s-'+s.id+'" data-g="'+s.g+'"><h2>'+esc(s.t)+'</h2>'+(s.note?'<p class="note">'+esc(s.note)+'</p>':'');
+    if(s.items&&s.items.length){html+='<div class="card">'+colHead(s.cols)+s.items.map(function(i){return rowHtml(i,s.cols)}).join('')+'</div>'}
+    (s.sub||[]).forEach(function(b){
+      html+='<h3 class="sub-h">'+esc(b.h)+'</h3><div class="card">'+colHead(s.cols)+b.items.map(function(i){return rowHtml(i,s.cols,b.h)}).join('')+'</div>';
+    });
+    if(s.add){html+='<div class="addons" data-s="'+esc((s.add.h+' '+s.add.l.map(function(x){return x[0]}).join(' ')).toLowerCase())+'"><h3>'+esc(s.add.h)+'</h3><ul>'+s.add.l.map(function(x){return '<li>'+esc(x[0])+(x[1]!==''?' <b>₱'+x[1]+'</b>':'')+'</li>'}).join('')+'</ul></div>'}
+    html+='</section>';
+  });
+  menuEl.innerHTML=html;
+}
+function buildChips(){
+  chipsEl.innerHTML=MENU.filter(function(s){return s.g===group}).map(function(s){return '<button type="button" class="chip" data-id="s-'+s.id+'">'+esc(s.t)+'</button>'}).join('');
+}
+function apply(){
+  var q=qEl.value.trim().toLowerCase(),shown=0;
+  document.querySelectorAll('section').forEach(function(sec){
+    var inGroup=q?true:sec.getAttribute('data-g')===group;
+    var any=false;
+    sec.querySelectorAll('.row,.addons').forEach(function(r){
+      var hit=!q||r.getAttribute('data-s').indexOf(q)>-1||sec.querySelector('h2').textContent.toLowerCase().indexOf(q)>-1;
+      r.style.display=hit?'':'none';
+      if(hit)any=true;
+    });
+    sec.querySelectorAll('.card').forEach(function(c){c.style.display=Array.prototype.some.call(c.querySelectorAll('.row'),function(r){return r.style.display!=='none'})?'':'none'});
+    sec.querySelectorAll('.sub-h').forEach(function(h){var c=h.nextElementSibling;h.style.display=c&&c.style.display==='none'?'none':''});
+    var show=inGroup&&any;
+    sec.style.display=show?'':'none';
+    if(show)shown++;
+  });
+  chipsEl.style.display=q?'none':'';
+  emptyEl.style.display=shown?'none':'block';
+}
+function setGroup(g){
+  group=g;
+  document.getElementById('tab-food').setAttribute('aria-pressed',g==='food');
+  document.getElementById('tab-drinks').setAttribute('aria-pressed',g==='drinks');
+  buildChips();apply();window.scrollTo(0,0);setActive();
+}
+function stickH(){return document.querySelector('.sticky').offsetHeight}
+function syncStick(){document.documentElement.style.setProperty('--stick',stickH()+'px')}
+function setActive(){
+  var secs=Array.prototype.filter.call(document.querySelectorAll('section'),function(s){return s.style.display!=='none'});
+  var cur=null;
+  var lim=stickH()+24;
+  secs.forEach(function(s){if(s.getBoundingClientRect().top<=lim)cur=s.id});
+  if(!cur&&secs.length)cur=secs[0].id;
+  if(secs.length&&window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-2)cur=secs[secs.length-1].id;
+  chipsEl.querySelectorAll('.chip').forEach(function(c){
+    var on=c.getAttribute('data-id')===cur;
+    c.classList.toggle('on',on);
+    if(on&&c.scrollIntoView){var box=chipsEl.getBoundingClientRect(),cb=c.getBoundingClientRect();if(cb.left<box.left||cb.right>box.right){chipsEl.scrollLeft+=cb.left-box.left-16}}
+  });
+}
+chipsEl.addEventListener('click',function(e){
+  var b=e.target.closest('.chip');if(!b)return;
+  var t=document.getElementById(b.getAttribute('data-id'));
+  if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.getElementById('tab-food').addEventListener('click',function(){setGroup('food')});
+document.getElementById('tab-drinks').addEventListener('click',function(){setGroup('drinks')});
+qEl.addEventListener('input',function(){apply();syncStick();setActive()});
+var tick=false;
+window.addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){setActive();tick=false})},{passive:true});
+render();buildChips();apply();syncStick();setActive();
+window.addEventListener('resize',function(){syncStick();setActive()});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){syncStick();setActive()});
+</script>
+</body>
+</html>
