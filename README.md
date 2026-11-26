@@ -20,7 +20,7 @@ The menu reads its items and prices from **Rainbrew Menu 11.26.26 (source of tru
 - **Columns the site reads (by header name):**
   - Category, Item, Size / Variation, Contents / Description, Walk-in price, Online price
   - Optional **Tags**: comma-separated, any of `Best seller`, `New`, `Spicy`, `Sold out`
-  - Optional **Photo**: an `https://` image link
+  - Optional **Photo**: a file name from the `photos/` folder (e.g. `halo-halo.jpg`), a Google Drive share link (the file must be shared as "Anyone with the link"), or any `https://` image link
 - **What customers see:** the "Contents / Description" column, so keep it customer-friendly. Notes are never shown.
 - **Walk-in prices:** when the sheet has them, customers can switch between online and walk-in prices. Orders always use online prices.
 - **Special descriptions:** the "Must Try Specials" descriptions live in `index.html`. Their prices come from the matching items in the sheet.

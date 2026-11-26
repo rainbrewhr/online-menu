@@ -90,7 +90,7 @@ section .note{margin:4px 0 0;color:var(--muted);font-size:14px}
 .colhead span,.row .p{min-width:72px;text-align:center}
 .row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px dashed var(--line)}
 .row:last-child{border-bottom:0}
-.row .ph{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:0 0 auto;background:var(--soft)}
+.row .ph{width:64px;height:64px;border-radius:10px;object-fit:cover;flex:0 0 auto;background:var(--soft)}
 .row .t{flex:1;min-width:0}
 .row .n{font-weight:500;overflow-wrap:anywhere}
 .row .d{display:block;font-size:13.5px;color:var(--muted);margin-top:1px}
@@ -258,10 +258,10 @@ var CONFIG={
   /* Live prices: the Google Sheet must be shared as "Anyone with the link can view". Leave '' to use only the built-in menu below. */
   sheetCsv:'https://docs.google.com/spreadsheets/d/1vzjvr5cmlHu02OXuOkmootrUmH3kJLOO9bua1Ze7S88/gviz/tq?tqx=out:csv&headers=1&sheet=Untitled',
   /* Shown in "Order or ask us" when filled in */
-  phone:'',
-  address:'',
+  phone:'0945 324 5536',
+  address:'Koufonissi Bldg., Carmen St, San Pedro, Binalbagan, 6107 Negros Occidental',
   hours:'',
-  mapUrl:''
+  mapUrl:'https://maps.app.goo.gl/HwmCBq3o1HXN6oWB8'
 };
 
 /* ===== Built-in menu (used when the sheet can't be loaded) ===== */
@@ -358,6 +358,15 @@ function parseCSV(t){
   return rows;
 }
 function num(v){var s=String(v==null?'':v).replace(/[₱,\s]/g,'');return s!==''&&isFinite(s)?Number(s):null}
+/* Photo column: a file name in the photos/ folder (e.g. halo-halo.jpg), a Google Drive share link, or any https:// image link */
+function photoUrl(v){
+  v=String(v||'').trim();if(!v)return '';
+  var m=v.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=|thumbnail\?id=)([\w-]{20,})/);
+  if(m)return 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w400';
+  if(/^https:\/\//.test(v))return v;
+  if(/^[\w.\- ]+\.(jpe?g|png|webp|gif|avif)$/i.test(v))return 'photos/'+encodeURIComponent(v);
+  return '';
+}
 function tagsOf(s){return String(s||'').split(/[,;]/).map(function(x){return norm(x)}).filter(Boolean)}
 /* Builds the menu from sheet rows. Returns null when the sheet doesn't look right, so the built-in menu stays. */
 function fromSheet(csv){
@@ -374,7 +383,7 @@ function fromSheet(csv){
     var R=rows[r],cat=(R[C.cat]||'').trim(),name=(R[C.item]||'').trim();if(!cat||!name)continue;
     var size=C.size>-1?(R[C.size]||'').trim():'',on=num(R[C.online]),wk=C.walk>-1?num(R[C.walk]):null,tags=C.tags>-1?tagsOf(R[C.tags]):[];
     if(on!=null)priced++;if(wk!=null)hasWalk=true;
-    var key=norm(cat)+'|'+norm(name);look[key+'|'+norm(size)]=look[key+'|'+norm(size)]||{p:on,w:wk,tags:tags};look[key]=look[key]||{p:on,w:wk,tags:tags};
+    var key=norm(cat)+'|'+norm(name);var ph=C.photo>-1?photoUrl(R[C.photo]):'',lk={p:on,w:wk,tags:tags,img:ph};look[key+'|'+norm(size)]=look[key+'|'+norm(size)]||lk;look[key]=look[key]||lk;
     var loc=CAT[norm(cat).replace(/ and /g,' ')]||CAT[cat.toLowerCase()];
     var sec;
     if(loc)sec=byId[loc[0]];
@@ -382,21 +391,21 @@ function fromSheet(csv){
     if(loc[2]){if(!sec.add)sec.add={h:'Add-ons',l:[]};sec.add.l.push({n:name,p:[on],w:[wk],tags:tags});continue}
     var list=sec.items;
     if(loc[1]){var b=null;sec.sub.forEach(function(x){if(x.h===loc[1])b=x});if(!b){b={h:loc[1],items:[]};sec.sub.push(b)}list=b.items}
-    var desc=C.desc>-1&&R[C.desc]?R[C.desc].trim():baseDesc(sec.id,name),photo=C.photo>-1?(R[C.photo]||'').trim():'';
+    var desc=C.desc>-1&&R[C.desc]?R[C.desc].trim():baseDesc(sec.id,name),photo=C.photo>-1?photoUrl(R[C.photo]):'';
     var cols=sec.cols,idx=-1;
     if(cols){cols.forEach(function(c,i){if(norm(c)===norm(size))idx=i});if(idx<0)idx=0}
     var it=null;
     for(var j=0;j<list.length;j++){if(norm(list[j].n)===norm(name)&&(cols||norm(list[j].size)===norm(size))){it=list[j];break}}
     if(!it&&!cols){for(j=0;j<list.length;j++)if(norm(list[j].n)===norm(name)){name=name+' ('+size+')';break}}
-    if(!it){it={n:name,size:size,p:cols?cols.map(function(){return null}):[null],w:cols?cols.map(function(){return null}):[null],d:desc,tags:[],img:/^https:\/\//.test(photo)?photo:''};list.push(it)}
-    var k=cols?idx:0;it.p[k]=on;it.w[k]=wk;
+    if(!it){it={n:name,size:size,p:cols?cols.map(function(){return null}):[null],w:cols?cols.map(function(){return null}):[null],d:desc,tags:[],img:photo};list.push(it)}
+    var k=cols?idx:0;it.p[k]=on;it.w[k]=wk;if(!it.img&&photo)it.img=photo;
     tags.forEach(function(t){if(it.tags.indexOf(t)<0)it.tags.push(t)});
   }
   if(priced<20)return null;
   var sp=byId.specials;
   base.specials.items.forEach(function(x){
     var m=x.r&&look[x.r];
-    sp.items.push({n:x.n,p:[m?m.p:x.p[0]],w:[m?m.w:null],d:x.d,tags:m?m.tags:[]});
+    sp.items.push({n:x.n,p:[m?m.p:x.p[0]],w:[m?m.w:null],d:x.d,tags:m?m.tags:[],img:m?m.img:''});
   });
   return {menu:out,walk:hasWalk};
 }
@@ -425,7 +434,7 @@ function priceCell(it,i,cols,ctx){
 }
 function rowHtml(it,cols,ctx,grp){
   var s=norm([it.n,it.d,grp||'',ctx].concat(it.tags||[]).join(' '));
-  return '<div class="row'+(isSold(it)?' soldout':'')+'" data-s="'+esc(s)+'">'+(it.img?'<img class="ph" src="'+esc(it.img)+'" alt="" loading="lazy">':'')+'<div class="t"><span class="n">'+esc(it.n)+'</span>'+badges(it.tags)+(it.d?'<span class="d">'+esc(it.d)+'</span>':'')+'</div>'+it.p.map(function(_,i){return priceCell(it,i,cols,ctx)}).join('')+'</div>';
+  return '<div class="row'+(isSold(it)?' soldout':'')+'" data-s="'+esc(s)+'">'+(it.img?'<img class="ph" src="'+esc(it.img)+'" alt="" loading="lazy" onerror="this.remove()">':'')+'<div class="t"><span class="n">'+esc(it.n)+'</span>'+badges(it.tags)+(it.d?'<span class="d">'+esc(it.d)+'</span>':'')+'</div>'+it.p.map(function(_,i){return priceCell(it,i,cols,ctx)}).join('')+'</div>';
 }
 function colHead(cols){return cols?'<div class="colhead">'+cols.map(function(c){return '<span>'+esc(c)+'</span>'}).join('')+'</div>':''}
 function addonHtml(s){
